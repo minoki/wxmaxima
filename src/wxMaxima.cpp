@@ -5914,15 +5914,15 @@ void wxMaxima::MaximaMenu(wxCommandEvent &event)
     }
       break;
     case menu_fun_def:
-    {
-      wxString cmd = GetTextFromUser(_("Show the definition of function:"),
-                                     _("Function"), m_worksheet->m_configuration, wxEmptyString, this);
-      if (cmd.Length())
-      {
-        cmd = wxT("fundef(") + cmd + wxT(");");
-        MenuCommand(cmd);
-      }
-    }
+      GetTextFromUser(_("Show the definition of function:"),
+                      _("Function"), m_worksheet->m_configuration, wxEmptyString, this,
+                      [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("fundef(") + cmd + wxT(");");
+                          MenuCommand(cmd);
+                        }
+                      });
       break;
     case menu_add_path:
     {
@@ -5982,28 +5982,28 @@ void wxMaxima::MaximaMenu(wxCommandEvent &event)
     }
       break;
     case menu_clear_var:
-    {
-      wxString cmd = GetTextFromUser(_("Delete variable(s):"), _("Delete"),
-                                     m_worksheet->m_configuration,
-                                     wxT("all"), this);
-      if (cmd.Length())
-      {
-        cmd = wxT("remvalue(") + cmd + wxT(");");
-        MenuCommand(cmd);
-      }
-    }
+      GetTextFromUser(_("Delete variable(s):"), _("Delete"),
+                      m_worksheet->m_configuration,
+                      wxT("all"), this,
+                      [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("remvalue(") + cmd + wxT(");");
+                          MenuCommand(cmd);
+                        }
+                      });
       break;
     case menu_clear_fun:
-    {
-      wxString cmd = GetTextFromUser(_("Delete function(s):"), _("Delete"),
-                                     m_worksheet->m_configuration,
-                                     wxT("all"), this);
-      if (cmd.Length())
-      {
-        cmd = wxT("remfunction(") + cmd + wxT(");");
-        MenuCommand(cmd);
-      }
-    }
+      GetTextFromUser(_("Delete function(s):"), _("Delete"),
+                      m_worksheet->m_configuration,
+                      wxT("all"), this,
+                      [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("remfunction(") + cmd + wxT(");");
+                          MenuCommand(cmd);
+                        }
+                      });
       break;
     case menu_subst:
     case button_subst:
@@ -6214,58 +6214,58 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
     }
       break;
     case menu_solve_algsys:
-    {
-      wxString sz = GetTextFromUser(_("Number of equations:"),
-                                    _("Solve algebraic system"),
-                                    m_worksheet->m_configuration,
-                                    wxT("3"), this);
-      if (sz.Length() == 0)
-        return;
-      long isz;
-      if (!sz.ToLong(&isz) || isz <= 0)
-      {
-        LoggingMessageBox(_("Not a valid number of equations!"), _("Error!"),
-                     wxOK | wxICON_ERROR);
-        return;
-      }
-      wxWindowPtr<SysWiz> wiz(new SysWiz(this, -1, m_worksheet->m_configuration, _("Solve algebraic system"), isz));
-      //wiz->Centre(wxBOTH);
-      wiz->ShowWindowModalThenDo(
-        [this,wiz](int retcode) {
-          if (retcode == wxID_OK)
-          {
-            wxString cmd = wxT("algsys") + wiz->GetValue();
-            MenuCommand(cmd);
-          }
-        });
-    }
+      GetTextFromUser(_("Number of equations:"),
+                      _("Solve algebraic system"),
+                      m_worksheet->m_configuration,
+                      wxT("3"), this,
+                      [this](wxString sz) {
+                        if (sz.Length() == 0)
+                          return;
+                        long isz;
+                        if (!sz.ToLong(&isz) || isz <= 0)
+                        {
+                          LoggingMessageBox(_("Not a valid number of equations!"), _("Error!"),
+                                            wxOK | wxICON_ERROR);
+                          return;
+                        }
+                        wxWindowPtr<SysWiz> wiz(new SysWiz(this, -1, m_worksheet->m_configuration, _("Solve algebraic system"), isz));
+                        //wiz->Centre(wxBOTH);
+                        wiz->ShowWindowModalThenDo(
+                          [this,wiz](int retcode) {
+                            if (retcode == wxID_OK)
+                            {
+                              wxString cmd = wxT("algsys") + wiz->GetValue();
+                              MenuCommand(cmd);
+                            }
+                          });
+                      });
       break;
     case menu_solve_lin:
-    {
-      wxString sz = GetTextFromUser(_("Number of equations:"),
-                                    _("Solve linear system"),
-                                    m_worksheet->m_configuration,
-                                    wxT("3"), this);
-      if (sz.Length() == 0)
-        return;
-      long isz;
-      if (!sz.ToLong(&isz) || isz <= 0)
-      {
-        LoggingMessageBox(_("Not a valid number of equations!"), _("Error!"),
-                     wxOK | wxICON_ERROR);
-        return;
-      }
-      wxWindowPtr<SysWiz> wiz(new SysWiz(this, -1, m_worksheet->m_configuration, _("Solve linear system"), isz));
-      //wiz->Centre(wxBOTH);
-      wiz->ShowWindowModalThenDo(
-        [this,wiz](int retcode) {
-          if (retcode == wxID_OK)
-          {
-            wxString cmd = wxT("linsolve") + wiz->GetValue();
-            MenuCommand(cmd);
-          }
-        });
-    }
+      GetTextFromUser(_("Number of equations:"),
+                      _("Solve linear system"),
+                      m_worksheet->m_configuration,
+                      wxT("3"), this,
+                      [this](wxString sz) {
+                        if (sz.Length() == 0)
+                          return;
+                        long isz;
+                        if (!sz.ToLong(&isz) || isz <= 0)
+                        {
+                          LoggingMessageBox(_("Not a valid number of equations!"), _("Error!"),
+                                            wxOK | wxICON_ERROR);
+                          return;
+                        }
+                        wxWindowPtr<SysWiz> wiz(new SysWiz(this, -1, m_worksheet->m_configuration, _("Solve linear system"), isz));
+                        //wiz->Centre(wxBOTH);
+                        wiz->ShowWindowModalThenDo(
+                          [this,wiz](int retcode) {
+                            if (retcode == wxID_OK)
+                            {
+                              wxString cmd = wxT("linsolve") + wiz->GetValue();
+                              MenuCommand(cmd);
+                            }
+                          });
+                      });
       break;
     case menu_solve_de:
     {
@@ -7416,31 +7416,31 @@ void wxMaxima::SimplifyMenu(wxCommandEvent &event)
       break;
     }
     case menu_tellrat:
-    {
-      wxString cmd = GetTextFromUser(_("Enter an equation for rational simplification:"),
-                                     _("Tellrat"),
-                                     m_worksheet->m_configuration,
-                                     wxEmptyString, this);
-      if (cmd.Length())
-      {
-        cmd = wxT("tellrat(") + cmd + wxT(");");
-        MenuCommand(cmd);
-      }
+      GetTextFromUser(_("Enter an equation for rational simplification:"),
+                      _("Tellrat"),
+                      m_worksheet->m_configuration,
+                      wxEmptyString, this,
+                      [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("tellrat(") + cmd + wxT(");");
+                          MenuCommand(cmd);
+                        }
+                      });
       break;
-    }
     case menu_modulus:
-    {
-      wxString cmd = GetTextFromUser(_("Calculate modulus:"),
-                                     _("Modulus"),
-                                     m_worksheet->m_configuration,
-                                     wxT("false"), this);
-      if (cmd.Length())
-      {
-        cmd = wxT("modulus : ") + cmd + wxT(";");
-        MenuCommand(cmd);
-      }
+      GetTextFromUser(_("Calculate modulus:"),
+                      _("Modulus"),
+                      m_worksheet->m_configuration,
+                      wxT("false"), this,
+                      [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("modulus : ") + cmd + wxT(";");
+                          MenuCommand(cmd);
+                        }
+                      });
       break;
-    }
     default:
       break;
   }
@@ -7799,19 +7799,18 @@ void wxMaxima::PlotMenu(wxCommandEvent &event)
       MenuCommand(wxT("if wxanimate_autoplay#false then wxanimate_autoplay:false else wxanimate_autoplay:true;"));
       break;
     case menu_animationframerate:
-    {
-      wxString cmd = GetTextFromUser(_("Enter new animation frame rate [Hz, integer]:"), _("Frame rate"),
-                                     m_worksheet->m_configuration,
-                                     wxT("2"), this);
-      wxRegEx number("^[0-9][0-9]*$");
-
-      if (number.Matches(cmd))
-      {
-        cmd = wxT("wxanimate_framerate : ") + cmd + wxT(";");
-        MenuCommand(cmd);
-      }
-    }
-    break;
+      GetTextFromUser(_("Enter new animation frame rate [Hz, integer]:"), _("Frame rate"),
+                      m_worksheet->m_configuration,
+                      wxT("2"), this,
+                      [this](wxString cmd) {
+                        wxRegEx number("^[0-9][0-9]*$");
+                        if (number.Matches(cmd))
+                        {
+                          cmd = wxT("wxanimate_framerate : ") + cmd + wxT(";");
+                          MenuCommand(cmd);
+                        }
+                      });
+      break;
     case button_plot2:
     case gp_plot2:
     {
@@ -7887,28 +7886,28 @@ void wxMaxima::NumericalMenu(wxCommandEvent &event)
     }
       break;
     case menu_set_precision:
-    {
-      wxString cmd = GetTextFromUser(_("Enter new precision for bigfloats:"), _("Precision"),
-                                     m_worksheet->m_configuration,
-                                     wxT("16"), this);
-      if (cmd.Length())
-      {
-        cmd = wxT("fpprec : ") + cmd + wxT(";");
-        MenuCommand(cmd);
-      }
-    }
+      GetTextFromUser(_("Enter new precision for bigfloats:"), _("Precision"),
+                      m_worksheet->m_configuration,
+                      wxT("16"), this,
+                      [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("fpprec : ") + cmd + wxT(";");
+                          MenuCommand(cmd);
+                        }
+                      });
       break;
     case menu_set_displayprecision:
-    {
-      wxString cmd = GetTextFromUser(_("How many digits to show:"), _("Displayed Precision"),
-                                     m_worksheet->m_configuration,
-                                     wxT("0"), this);
-      if (cmd.Length())
-      {
-        cmd = wxT("fpprintprec : ") + cmd + wxT(";");
-        MenuCommand(cmd);
-      }
-    }
+      GetTextFromUser(_("How many digits to show:"), _("Displayed Precision"),
+                      m_worksheet->m_configuration,
+                      wxT("0"), this,
+                      [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("fpprintprec : ") + cmd + wxT(";");
+                          MenuCommand(cmd);
+                        }
+                      });
       break;
   case menu_engineeringFormat:
     MenuCommand(wxT("load(\"engineering-format\")$"));
@@ -8048,35 +8047,37 @@ void wxMaxima::HelpMenu(wxCommandEvent &event)
 
     case menu_example:
     {
-      wxString cmd;
+      auto callback = [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("example(") + cmd + wxT(");");
+                          MenuCommand(cmd);
+                        }
+                      };
       if (expr == wxT("%"))
-        cmd = GetTextFromUser(_("Show an example for the command:"), _("Example"),
-                              m_worksheet->m_configuration,
-                              wxEmptyString, this);
+        GetTextFromUser(_("Show an example for the command:"), _("Example"),
+                        m_worksheet->m_configuration,
+                        wxEmptyString, this, callback);
       else
-        cmd = expr;
-      if (cmd.Length())
-      {
-        cmd = wxT("example(") + cmd + wxT(");");
-        MenuCommand(cmd);
-      }
+        callback(expr);
     }
       break;
 
     case menu_apropos:
     {
-      wxString cmd;
+      auto callback = [this](wxString cmd) {
+                        if (cmd.Length())
+                        {
+                          cmd = wxT("apropos(\"") + cmd + wxT("\");");
+                          MenuCommand(cmd);
+                        }
+                      };
       if (expr == wxT("%"))
-        cmd = GetTextFromUser(_("Show all commands similar to:"), _("Apropos"),
-                              m_worksheet->m_configuration,
-                              wxEmptyString, this);
+        GetTextFromUser(_("Show all commands similar to:"), _("Apropos"),
+                        m_worksheet->m_configuration,
+                        wxEmptyString, this, callback);
       else
-        cmd = expr;
-      if (cmd.Length())
-      {
-        cmd = wxT("apropos(\"") + cmd + wxT("\");");
-        MenuCommand(cmd);
-      }
+        callback(expr);
     }
       break;
 
@@ -8151,68 +8152,67 @@ void wxMaxima::StatsMenu(wxCommandEvent &event)
     }
       break;
     case menu_stats_barsplot:
-    {
-      wxString data = GetTextFromUser(_("Data:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("wxbarsplot(") + data + wxT(");"));
-    }
+      GetTextFromUser(_("Data:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("wxbarsplot(") + data + wxT(");"));
+                      });
       break;
     case menu_stats_boxplot:
-    {
-      wxString data = GetTextFromUser(_("Data:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("wxboxplot([") + data + wxT("]);"));
-    }
+      GetTextFromUser(_("Data:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("wxboxplot([") + data + wxT("]);"));
+                      });
       break;
     case menu_stats_piechart:
-    {
-      wxString data = GetTextFromUser(_("Data:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("wxpiechart(") + data + wxT(");"));
-    }
+      GetTextFromUser(_("Data:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("wxpiechart(") + data + wxT(");"));
+                      });
       break;
     case menu_stats_mean:
-    {
-
-      wxString data = GetTextFromUser(_("Data:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("mean(") + data + wxT(");"));
-    }
+      GetTextFromUser(_("Data:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("mean(") + data + wxT(");"));
+                      });
       break;
     case menu_stats_median:
-    {
-      wxString data = GetTextFromUser(_("Data:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("median(") + data + wxT(");"));
-    }
+      GetTextFromUser(_("Data:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("median(") + data + wxT(");"));
+                      });
       break;
     case menu_stats_var:
-    {
-      wxString data = GetTextFromUser(_("Data:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("var(") + data + wxT(");"));
-    }
+      GetTextFromUser(_("Data:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("var(") + data + wxT(");"));
+                      });
       break;
     case menu_stats_dev:
-    {
-      wxString data = GetTextFromUser(_("Data:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("std(") + data + wxT(");"));
-    }
+      GetTextFromUser(_("Data:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("std(") + data + wxT(");"));
+                      });
       break;
     case menu_stats_tt1:
     {
@@ -8252,23 +8252,22 @@ void wxMaxima::StatsMenu(wxCommandEvent &event)
     }
       break;
     case menu_stats_tnorm:
-    {
-      wxString data = GetTextFromUser(_("Data:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("test_normality(") + data + wxT(");"));
-    }
+      GetTextFromUser(_("Data:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("test_normality(") + data + wxT(");"));
+                      });
       break;
     case menu_stats_linreg:
-    {
-
-      wxString data = GetTextFromUser(_("Data Matrix:"), _("Enter Data"),
-                                      m_worksheet->m_configuration,
-                                      expr, this);
-      if (data.Length() > 0)
-        MenuCommand(wxT("simple_linear_regression(") + data + wxT(");"));
-    }
+      GetTextFromUser(_("Data Matrix:"), _("Enter Data"),
+                      m_worksheet->m_configuration,
+                      expr, this,
+                      [this](wxString data) {
+                        if (data.Length() > 0)
+                          MenuCommand(wxT("simple_linear_regression(") + data + wxT(");"));
+                      });
       break;
     case menu_stats_lsquares:
     {
