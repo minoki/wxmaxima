@@ -5201,7 +5201,6 @@ void wxMaxima::FileMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   bool forceSave = false;
 #if defined __WXMSW__
   wxString b = wxT("\\");
@@ -5853,7 +5852,6 @@ void wxMaxima::MaximaMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   wxString b = wxT("\\");
   wxString f = wxT("/");
   switch (event.GetId())
@@ -5897,27 +5895,33 @@ void wxMaxima::MaximaMenu(wxCommandEvent &event)
       );
       if (choice.Length())
       {
-        cmd = wxT("set_display('") + choice + wxT(")$");
+        wxString cmd = wxT("set_display('") + choice + wxT(")$");
         MenuCommand(cmd);
       }
     }
       break;
     case menu_texform:
-      cmd = wxT("tex(") + expr + wxT(")$");
+    {
+      wxString cmd = wxT("tex(") + expr + wxT(")$");
       MenuCommand(cmd);
+    }
       break;
     case menu_time:
-      cmd = wxT("if showtime#false then showtime:false else showtime:all$");
+    {
+      wxString cmd = wxT("if showtime#false then showtime:false else showtime:all$");
       MenuCommand(cmd);
+    }
       break;
     case menu_fun_def:
-      cmd = GetTextFromUser(_("Show the definition of function:"),
-                            _("Function"), m_worksheet->m_configuration, wxEmptyString, this);
+    {
+      wxString cmd = GetTextFromUser(_("Show the definition of function:"),
+                                     _("Function"), m_worksheet->m_configuration, wxEmptyString, this);
       if (cmd.Length())
       {
         cmd = wxT("fundef(") + cmd + wxT(");");
         MenuCommand(cmd);
       }
+    }
       break;
     case menu_add_path:
     {
@@ -5930,7 +5934,7 @@ void wxMaxima::MaximaMenu(wxCommandEvent &event)
 #if defined (__WXMSW__)
         dir.Replace(wxT("\\"), wxT("/"));
 #endif
-        cmd = wxT("file_search_maxima : cons(sconcat(\"") + dir +
+        wxString cmd = wxT("file_search_maxima : cons(sconcat(\"") + dir +
               wxT("/###.{lisp,mac,mc}\"), file_search_maxima)$");
         MenuCommand(cmd);
       }
@@ -5977,24 +5981,28 @@ void wxMaxima::MaximaMenu(wxCommandEvent &event)
     }
       break;
     case menu_clear_var:
-      cmd = GetTextFromUser(_("Delete variable(s):"), _("Delete"),
-                            m_worksheet->m_configuration,
-                            wxT("all"), this);
+    {
+      wxString cmd = GetTextFromUser(_("Delete variable(s):"), _("Delete"),
+                                     m_worksheet->m_configuration,
+                                     wxT("all"), this);
       if (cmd.Length())
       {
         cmd = wxT("remvalue(") + cmd + wxT(");");
         MenuCommand(cmd);
       }
+    }
       break;
     case menu_clear_fun:
-      cmd = GetTextFromUser(_("Delete function(s):"), _("Delete"),
-                            m_worksheet->m_configuration,
-                            wxT("all"), this);
+    {
+      wxString cmd = GetTextFromUser(_("Delete function(s):"), _("Delete"),
+                                     m_worksheet->m_configuration,
+                                     wxT("all"), this);
       if (cmd.Length())
       {
         cmd = wxT("remfunction(") + cmd + wxT(");");
         MenuCommand(cmd);
       }
+    }
       break;
     case menu_subst:
     case button_subst:
@@ -6021,20 +6029,25 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   switch (event.GetId())
   {
     case menu_allroots:
-      cmd = wxT("allroots(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("allroots(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_bfallroots:
-      cmd = wxT("bfallroots(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("bfallroots(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_realroots:
-      cmd = wxT("realroots(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("realroots(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case button_solve:
     case menu_solve:
@@ -6055,7 +6068,7 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
       wiz->SetLabel2ToolTip(_("Comma-separated variables"));
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("solve([") + wiz->GetValue1() + wxT("], [") +
+        wxString cmd = wxT("solve([") + wiz->GetValue1() + wxT("], [") +
               wiz->GetValue2() + wxT("]);");
         MenuCommand(cmd);
       }
@@ -6071,7 +6084,7 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("to_poly_solve([") + wiz->GetValue1() + wxT("], [") +
+        wxString cmd = wxT("to_poly_solve([") + wiz->GetValue1() + wxT("], [") +
               wiz->GetValue2() + wxT("]);");
         MenuCommand(cmd);
       }
@@ -6090,7 +6103,7 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("find_root(") + wiz->GetValue1() + wxT(", ") +
+        wxString cmd = wxT("find_root(") + wiz->GetValue1() + wxT(", ") +
               wiz->GetValue2() + wxT(", ") +
               wiz->GetValue3() + wxT(", ") +
               wiz->GetValue4() + wxT(");");
@@ -6174,7 +6187,7 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("eliminate([") + wiz->GetValue1() + wxT("],[")
+        wxString cmd = wxT("eliminate([") + wiz->GetValue1() + wxT("],[")
               + wiz->GetValue2() + wxT("]);");
         MenuCommand(cmd);
       }
@@ -6200,7 +6213,7 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("algsys") + wiz->GetValue();
+        wxString cmd = wxT("algsys") + wiz->GetValue();
         MenuCommand(cmd);
       }
       wiz->Destroy();
@@ -6225,7 +6238,7 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("linsolve") + wiz->GetValue();
+        wxString cmd = wxT("linsolve") + wiz->GetValue();
         MenuCommand(cmd);
       }
       wiz->Destroy();
@@ -6240,7 +6253,7 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("desolve([") + wiz->GetValue1() + wxT("],[")
+        wxString cmd = wxT("desolve([") + wiz->GetValue1() + wxT("],[")
               + wiz->GetValue2() + wxT("]);");
         MenuCommand(cmd);
       }
@@ -6266,12 +6279,16 @@ void wxMaxima::EquationsMenu(wxCommandEvent &event)
     }
       break;
     case menu_lhs:
-      cmd = wxT("lhs(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("lhs(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_rhs:
-      cmd = wxT("rhs(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("rhs(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     default:
       break;
@@ -6284,32 +6301,43 @@ void wxMaxima::AlgebraMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   switch (event.GetId())
   {
     case menu_invert_mat:
-      cmd = wxT("invert(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("invert(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_determinant:
-      cmd = wxT("determinant(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("determinant(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_eigen:
-      cmd = wxT("eigenvalues(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("eigenvalues(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_eigvect:
-      cmd = wxT("eigenvectors(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("eigenvectors(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_adjoint_mat:
-      cmd = wxT("adjoint(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("adjoint(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_transpose:
-      cmd = wxT("transpose(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("transpose(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_map_mat:
     {
@@ -6320,7 +6348,7 @@ void wxMaxima::AlgebraMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxEmptyString;
+        wxString cmd;
         if(wiz->GetValue1() == wxEmptyString)
           cmd = wiz->GetValue1() + wxT(":");
         cmd += wxT("matrixmap(") + wiz->GetValue2() + wxT(", ")
@@ -6339,6 +6367,7 @@ void wxMaxima::AlgebraMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
+        wxString cmd;
         if (wiz->GetValue0() != wxEmptyString)
           cmd = wiz->GetValue0() + wxT(": ");
         long w, h;
@@ -6375,7 +6404,7 @@ void wxMaxima::AlgebraMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("expand(charpoly(") + wiz->GetValue1() + wxT(", ")
+        wxString cmd = wxT("expand(charpoly(") + wiz->GetValue1() + wxT(", ")
               + wiz->GetValue2() + wxT("));");
         MenuCommand(cmd);
       }
@@ -6432,7 +6461,7 @@ void wxMaxima::AlgebraMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("map(") + wiz->GetValue1() + wxT(", ") + wiz->GetValue2() +
+        wxString cmd = wxT("map(") + wiz->GetValue1() + wxT(", ") + wiz->GetValue2() +
               wxT(");");
         MenuCommand(cmd);
       }
@@ -6449,7 +6478,7 @@ void wxMaxima::AlgebraMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("makelist(") + wiz->GetValue1() + wxT(", ") +
+        wxString cmd = wxT("makelist(") + wiz->GetValue1() + wxT(", ") +
               wiz->GetValue2() + wxT(", ") +
               wiz->GetValue3() + wxT(", ") +
               wiz->GetValue4() + wxT(");");
@@ -6467,7 +6496,7 @@ void wxMaxima::AlgebraMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("apply(") + wiz->GetValue1() + wxT(", ")
+        wxString cmd = wxT("apply(") + wiz->GetValue1() + wxT(", ")
               + wiz->GetValue2() + wxT(");");
         MenuCommand(cmd);
       }
@@ -6526,7 +6555,6 @@ void wxMaxima::DrawMenu(wxCommandEvent &event)
   else
     expr = "%";
 
-  wxString cmd;
   switch (event.GetId())
   {
   case menu_draw_2d:
@@ -6595,7 +6623,7 @@ void wxMaxima::DrawMenu(wxCommandEvent &event)
     //wiz->Centre(wxBOTH);
     if (wiz->ShowModal() == wxID_OK)
     {
-      cmd = wxT("title=\"") + wiz->GetValue() + wxT("\"");
+      wxString cmd = wxT("title=\"") + wiz->GetValue() + wxT("\"");
       AddDrawParameter(cmd);
     }
     wiz->Destroy();
@@ -6609,7 +6637,7 @@ void wxMaxima::DrawMenu(wxCommandEvent &event)
     //wiz->Centre(wxBOTH);
     if (wiz->ShowModal() == wxID_OK)
     {
-      cmd = wxT("key=\"") + wiz->GetValue() + wxT("\"");
+      wxString cmd = wxT("key=\"") + wiz->GetValue() + wxT("\"");
       AddDrawParameter(cmd);
     }
     wiz->Destroy();
@@ -6667,7 +6695,7 @@ void wxMaxima::DrawMenu(wxCommandEvent &event)
     //wiz->Centre(wxBOTH);
     if (wiz->ShowModal() == wxID_OK)
     {
-      cmd = wxT("grid=[") + wiz->GetValue1() + "," + wiz->GetValue2() + wxT("]");
+      wxString cmd = wxT("grid=[") + wiz->GetValue1() + "," + wiz->GetValue2() + wxT("]");
       AddDrawParameter(cmd);
     }
     wiz->Destroy();
@@ -6715,7 +6743,6 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   switch (event.GetId())
   {
   case menu_list_create_from_args:
@@ -6729,7 +6756,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
     //wiz->Centre(wxBOTH);
     if (wiz->ShowModal() == wxID_OK)
     {
-      cmd = wxT("args(") + wiz->GetValue() + wxT(")");
+      wxString cmd = wxT("args(") + wiz->GetValue() + wxT(")");
       MenuCommand(cmd);
     }
     wiz->Destroy();
@@ -6749,7 +6776,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
     //wiz->Centre(wxBOTH);
     if (wiz->ShowModal() == wxID_OK)
     {
-      cmd = wxT("[") + wiz->GetValue() + wxT("]");
+      wxString cmd = wxT("[") + wiz->GetValue() + wxT("]");
       MenuCommand(cmd);
     }
     wiz->Destroy();
@@ -6839,7 +6866,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("push(") + wiz->GetValue1() + wxT(", ")
+        wxString cmd = wxT("push(") + wiz->GetValue1() + wxT(", ")
               + wiz->GetValue2() + wxT(");");
         MenuCommand(cmd);
       }
@@ -6868,7 +6895,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("rest(") + wiz->GetValue1();
+        wxString cmd = wxT("rest(") + wiz->GetValue1();
         wxString num = wiz->GetValue2();
         num.Trim(true);
         num.Trim(false);
@@ -6892,7 +6919,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("rest(") + wiz->GetValue1();
+        wxString cmd = wxT("rest(") + wiz->GetValue1();
         wxString num = wiz->GetValue2();
         num.Trim(true);
         num.Trim(false);
@@ -6912,7 +6939,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("rest(") + wiz->GetValue1() + wxT(",")
+        wxString cmd = wxT("rest(") + wiz->GetValue1() + wxT(",")
           + wiz->GetValue2() + wxT(")");
         MenuCommand(cmd);
       }
@@ -6944,7 +6971,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wiz->GetValue1() + wxT("[")
+        wxString cmd = wiz->GetValue1() + wxT("[")
           + wiz->GetValue2() + wxT("]");
         MenuCommand(cmd);
       }
@@ -6960,7 +6987,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("map(") + wiz->GetValue1() + wxT(",")
+        wxString cmd = wxT("map(") + wiz->GetValue1() + wxT(",")
           + wiz->GetValue2() + wxT(")");
         MenuCommand(cmd);
       }
@@ -6978,7 +7005,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("subst(") + wiz->GetValue2() + wxT(",")
+        wxString cmd = wxT("subst(") + wiz->GetValue2() + wxT(",")
           + wiz->GetValue1() + wxT(")");
         MenuCommand(cmd);
       }
@@ -6996,7 +7023,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("subst(") + wiz->GetValue1() + wxT(",")
+        wxString cmd = wxT("subst(") + wiz->GetValue1() + wxT(",")
           + wiz->GetValue2() + wxT(")");
         MenuCommand(cmd);
       }
@@ -7014,7 +7041,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("apply(") + wiz->GetValue1() + wxT(",")
+        wxString cmd = wxT("apply(") + wiz->GetValue1() + wxT(",")
           + wiz->GetValue2() + wxT(")");
         MenuCommand(cmd);
       }
@@ -7056,7 +7083,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("delete(") + wiz->GetValue1() + wxT(",")
+        wxString cmd = wxT("delete(") + wiz->GetValue1() + wxT(",")
           + wiz->GetValue2() + wxT(")");
         MenuCommand(cmd);
       }
@@ -7074,7 +7101,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("append(") + wiz->GetValue1() + wxT(",[")
+        wxString cmd = wxT("append(") + wiz->GetValue1() + wxT(",[")
           + wiz->GetValue2() + wxT("])");
         MenuCommand(cmd);
       }
@@ -7092,7 +7119,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("append(") + wiz->GetValue1() + wxT(",")
+        wxString cmd = wxT("append(") + wiz->GetValue1() + wxT(",")
           + wiz->GetValue2() + wxT(")");
         MenuCommand(cmd);
       }
@@ -7110,7 +7137,7 @@ void wxMaxima::ListMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("join(") + wiz->GetValue1() + wxT(",")
+        wxString cmd = wxT("join(") + wiz->GetValue1() + wxT(",")
           + wiz->GetValue2() + wxT(")");
         MenuCommand(cmd);
       }
@@ -7126,132 +7153,181 @@ void wxMaxima::SimplifyMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   switch (event.GetId())
   {
     case menu_nouns:
-      cmd = wxT("ev(") + expr + wxT(", nouns);");
+    {
+      wxString cmd = wxT("ev(") + expr + wxT(", nouns);");
       MenuCommand(cmd);
       break;
+    }
     case button_ratsimp:
     case menu_ratsimp:
-      cmd = wxT("ratsimp(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("ratsimp(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case button_radcan:
     case menu_radsimp:
-      cmd = wxT("radcan(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("radcan(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_to_fact:
-      cmd = wxT("makefact(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("makefact(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_to_gamma:
-      cmd = wxT("makegamma(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("makegamma(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_factcomb:
-      cmd = wxT("factcomb(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("factcomb(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_factsimp:
-      cmd = wxT("minfactorial(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("minfactorial(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_logcontract:
-      cmd = wxT("logcontract(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("logcontract(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_logexpand:
-      cmd = expr + wxT(", logexpand=super;");
+    {
+      wxString cmd = expr + wxT(", logexpand=super;");
       MenuCommand(cmd);
       break;
+    }
     case button_expand:
     case menu_expand:
-      cmd = wxT("expand(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("expand(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case button_factor:
     case menu_factor:
-      cmd = wxT("factor(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("factor(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_gfactor:
-      cmd = wxT("gfactor(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("gfactor(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case button_trigreduce:
     case menu_trigreduce:
-      cmd = wxT("trigreduce(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("trigreduce(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case button_trigsimp:
     case menu_trigsimp:
-      cmd = wxT("trigsimp(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("trigsimp(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case button_trigexpand:
     case menu_trigexpand:
-      cmd = wxT("trigexpand(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("trigexpand(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_trigrat:
     case button_trigrat:
-      cmd = wxT("trigrat(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("trigrat(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case button_rectform:
     case menu_rectform:
-      cmd = wxT("rectform(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("rectform(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_polarform:
-      cmd = wxT("polarform(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("polarform(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_demoivre:
-      cmd = wxT("demoivre(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("demoivre(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_exponentialize:
-      cmd = wxT("exponentialize(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("exponentialize(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_realpart:
-      cmd = wxT("realpart(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("realpart(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_imagpart:
-      cmd = wxT("imagpart(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("imagpart(") + expr + wxT(");");
       MenuCommand(cmd);
       break;
+    }
     case menu_talg:
-      cmd = wxT("algebraic : not(algebraic);");
+    {
+      wxString cmd = wxT("algebraic : not(algebraic);");
       MenuCommand(cmd);
       break;
+    }
     case menu_tellrat:
-      cmd = GetTextFromUser(_("Enter an equation for rational simplification:"),
-                            _("Tellrat"),
-                            m_worksheet->m_configuration,
-                            wxEmptyString, this);
+    {
+      wxString cmd = GetTextFromUser(_("Enter an equation for rational simplification:"),
+                                     _("Tellrat"),
+                                     m_worksheet->m_configuration,
+                                     wxEmptyString, this);
       if (cmd.Length())
       {
         cmd = wxT("tellrat(") + cmd + wxT(");");
         MenuCommand(cmd);
       }
       break;
+    }
     case menu_modulus:
-      cmd = GetTextFromUser(_("Calculate modulus:"),
-                            _("Modulus"),
-                            m_worksheet->m_configuration,
-                            wxT("false"), this);
+    {
+      wxString cmd = GetTextFromUser(_("Calculate modulus:"),
+                                     _("Modulus"),
+                                     m_worksheet->m_configuration,
+                                     wxT("false"), this);
       if (cmd.Length())
       {
         cmd = wxT("modulus : ") + cmd + wxT(";");
         MenuCommand(cmd);
       }
       break;
+    }
     default:
       break;
   }
@@ -7263,7 +7339,6 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   switch (event.GetId())
   {
     case menu_change_var:
@@ -7302,8 +7377,10 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
     }
       break;
     case menu_continued_fraction:
-      cmd += wxT("cfdisrep(cf(") + expr + wxT("));");
+    {
+      wxString cmd = wxT("cfdisrep(cf(") + expr + wxT("));");
       MenuCommand(cmd);
+    }
       break;
     case menu_lcm:
     {
@@ -7314,7 +7391,7 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("lcm(") + wiz->GetValue1() + wxT(", ")
+        wxString cmd = wxT("lcm(") + wiz->GetValue1() + wxT(", ")
               + wiz->GetValue2() + wxT(");");
         MenuCommand(cmd);
       }
@@ -7330,7 +7407,7 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("gcd(") + wiz->GetValue1() + wxT(", ")
+        wxString cmd = wxT("gcd(") + wiz->GetValue1() + wxT(", ")
               + wiz->GetValue2() + wxT(");");
         MenuCommand(cmd);
       }
@@ -7346,7 +7423,7 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("divide(") + wiz->GetValue1() + wxT(", ") +
+        wxString cmd = wxT("divide(") + wiz->GetValue1() + wxT(", ") +
               wiz->GetValue2() + wxT(");");
         MenuCommand(cmd);
       }
@@ -7362,7 +7439,7 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("partfrac(") + wiz->GetValue1() + wxT(", ")
+        wxString cmd = wxT("partfrac(") + wiz->GetValue1() + wxT(", ")
               + wiz->GetValue2() + wxT(");");
         MenuCommand(cmd);
       }
@@ -7378,7 +7455,7 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("risch(") + wiz->GetValue1() + wxT(", ")
+        wxString cmd = wxT("risch(") + wiz->GetValue1() + wxT(", ")
               + wiz->GetValue2() + wxT(");");
         MenuCommand(cmd);
       }
@@ -7502,7 +7579,7 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("lbfgs(") + wiz->GetValue1() + wxT(", [") +
+        wxString cmd = wxT("lbfgs(") + wiz->GetValue1() + wxT(", [") +
               wiz->GetValue2() + wxT("], [") +
               wiz->GetValue3() + wxT("], ") +
               wiz->GetValue4() + wxT(", [-1,0]);");
@@ -7535,7 +7612,7 @@ void wxMaxima::CalculusMenu(wxCommandEvent &event)
       //wiz->Centre(wxBOTH);
       if (wiz->ShowModal() == wxID_OK)
       {
-        cmd = wxT("product(") + wiz->GetValue1() + wxT(", ") +
+        wxString cmd = wxT("product(") + wiz->GetValue1() + wxT(", ") +
               wiz->GetValue2() + wxT(", ") +
               wiz->GetValue3() + wxT(", ") +
               wiz->GetValue4() + wxT(");");
@@ -7555,7 +7632,6 @@ void wxMaxima::PlotMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   switch (event.GetId())
   {
     case button_plot3:
@@ -7577,9 +7653,9 @@ void wxMaxima::PlotMenu(wxCommandEvent &event)
       break;
     case menu_animationframerate:
     {
-      cmd = GetTextFromUser(_("Enter new animation frame rate [Hz, integer]:"), _("Frame rate"),
-                            m_worksheet->m_configuration,
-                            wxT("2"), this);
+      wxString cmd = GetTextFromUser(_("Enter new animation frame rate [Hz, integer]:"), _("Frame rate"),
+                                     m_worksheet->m_configuration,
+                                     wxT("2"), this);
       wxRegEx number("^[0-9][0-9]*$");
 
       if (number.Matches(cmd))
@@ -7633,44 +7709,55 @@ void wxMaxima::NumericalMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
   switch (event.GetId())
   {
     case menu_to_float:
-      cmd = wxT("float(") + expr + wxT("), numer;");
+    {
+      wxString cmd = wxT("float(") + expr + wxT("), numer;");
       MenuCommand(cmd);
+    }
       break;
     case menu_to_bfloat:
-      cmd = wxT("bfloat(") + expr + wxT(");");
+    {
+      wxString cmd = wxT("bfloat(") + expr + wxT(");");
       MenuCommand(cmd);
+    }
       break;
     case menu_to_numer:
-      cmd = expr + wxT(",numer;");
+    {
+      wxString cmd = expr + wxT(",numer;");
       MenuCommand(cmd);
+    }
       break;
     case menu_num_out:
-      cmd = wxT("if numer#false then numer:false else numer:true;");
+    {
+      wxString cmd = wxT("if numer#false then numer:false else numer:true;");
       MenuCommand(cmd);
+    }
       break;
     case menu_set_precision:
-      cmd = GetTextFromUser(_("Enter new precision for bigfloats:"), _("Precision"),
-                            m_worksheet->m_configuration,
-                            wxT("16"), this);
+    {
+      wxString cmd = GetTextFromUser(_("Enter new precision for bigfloats:"), _("Precision"),
+                                     m_worksheet->m_configuration,
+                                     wxT("16"), this);
       if (cmd.Length())
       {
         cmd = wxT("fpprec : ") + cmd + wxT(";");
         MenuCommand(cmd);
       }
+    }
       break;
     case menu_set_displayprecision:
-      cmd = GetTextFromUser(_("How many digits to show:"), _("Displayed Precision"),
-                            m_worksheet->m_configuration,
-                            wxT("0"), this);
+    {
+      wxString cmd = GetTextFromUser(_("How many digits to show:"), _("Displayed Precision"),
+                                     m_worksheet->m_configuration,
+                                     wxT("0"), this);
       if (cmd.Length())
       {
         cmd = wxT("fpprintprec : ") + cmd + wxT(";");
         MenuCommand(cmd);
       }
+    }
       break;
   case menu_engineeringFormat:
     MenuCommand(wxT("load(\"engineering-format\")$"));
@@ -7687,7 +7774,7 @@ void wxMaxima::NumericalMenu(wxCommandEvent &event)
     //wiz->Centre(wxBOTH);
     if (wiz->ShowModal() == wxID_OK)
     {
-      cmd = wxT("engineering_format_floats: ") + wiz->GetValue1() + wxT("$\n") +
+      wxString cmd = wxT("engineering_format_floats: ") + wiz->GetValue1() + wxT("$\n") +
         wxT("engineering_format_min: ") + wiz->GetValue2() + wxT("$\n") +
         wxT("engineering_format_max: ") + wiz->GetValue3() + wxT("$\n") +
         wxT("fpprintprec: ") + wiz->GetValue4() + wxT("$");
@@ -7707,7 +7794,6 @@ void wxMaxima::HelpMenu(wxCommandEvent &event)
     m_worksheet->CloseAutoCompletePopup();
 
   wxString expr = GetDefaultEntry();
-  wxString cmd;
 
   switch (event.GetId())
   {
@@ -7808,6 +7894,8 @@ void wxMaxima::HelpMenu(wxCommandEvent &event)
       break;
 
     case menu_example:
+    {
+      wxString cmd;
       if (expr == wxT("%"))
         cmd = GetTextFromUser(_("Show an example for the command:"), _("Example"),
                               m_worksheet->m_configuration,
@@ -7819,9 +7907,12 @@ void wxMaxima::HelpMenu(wxCommandEvent &event)
         cmd = wxT("example(") + cmd + wxT(");");
         MenuCommand(cmd);
       }
+    }
       break;
 
     case menu_apropos:
+    {
+      wxString cmd;
       if (expr == wxT("%"))
         cmd = GetTextFromUser(_("Show all commands similar to:"), _("Apropos"),
                               m_worksheet->m_configuration,
@@ -7833,6 +7924,7 @@ void wxMaxima::HelpMenu(wxCommandEvent &event)
         cmd = wxT("apropos(\"") + cmd + wxT("\");");
         MenuCommand(cmd);
       }
+    }
       break;
 
     case menu_show_tip:
